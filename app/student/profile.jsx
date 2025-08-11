@@ -22,6 +22,8 @@ import { logout } from "../../utils/auth";
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState(null);
+  const [atten, setAtten] = useState(null);
+  const [streaks, setStreaks] = useState(null);
 
   const handleLogout = () => {
     logout();
@@ -41,8 +43,38 @@ export default function ProfileScreen() {
         );
       }
     };
+
+    const fetch = async () => {
+      try {
+        const resp = await api.get("/student-atten-percentage/", {
+          withCredentials: true,
+        });
+        setAtten(resp.data);
+      } catch (error) {
+        console.log(
+          "Error fetching profile:",
+          error.response?.data || error.message
+        );
+      }
+    };
+
+    const streak = async () => {
+      try {
+        const res = await api.get("/streak/", {
+          withCredentials: true,
+        });
+        setStreaks(res.data);
+      } catch (error) {
+        console.log(
+          "Error fetching profile:",
+          error.response?.data || error.message
+        );
+      }
+    };
     fetchProfile();
-  });
+    fetch();
+    streak();
+  }, []);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -102,7 +134,9 @@ export default function ProfileScreen() {
           >
             <CalendarCheck size={18} color={colors.success} />
           </View>
-          <Text style={styles.statValue}>85%</Text>
+          <Text style={styles.statValue}>
+            {atten?.attendance_percentage ?? "N/A"}%
+          </Text>
           <Text style={styles.statLabel}>Attendance</Text>
         </View>
 
@@ -115,8 +149,10 @@ export default function ProfileScreen() {
           >
             <BookOpen size={18} color={colors.primary} />
           </View>
-          <Text style={styles.statValue}>May 24</Text>
-          <Text style={styles.statLabel}>Last Attendance</Text>
+          <Text style={styles.statValue}>
+            {profile ? profile.last_attendance_date : "no date"}
+          </Text>
+          <Text style={styles.statLabel}>Last-Atten</Text>
         </View>
 
         <View style={styles.statCard}>
@@ -128,7 +164,7 @@ export default function ProfileScreen() {
           >
             <Flame size={18} color={colors.warning} />
           </View>
-          <Text style={styles.statValue}>8</Text>
+          <Text style={styles.statValue}>{streaks?.streak ?? "N/A"}</Text>
           <Text style={styles.statLabel}>Streak</Text>
         </View>
       </Animated.View>
@@ -240,7 +276,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   statValue: {
-    fontSize: fontSizes.xl,
+    fontSize: fontSizes.xs,
     fontFamily: "Inter-Bold",
     color: colors.textDark,
   },

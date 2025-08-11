@@ -10,7 +10,7 @@ export default function StudentTabLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: colors.white,
-          height: Platform.OS === "ios" ? 85 : 65,
+          height: Platform.OS === "ios" ? 85 : 110,
           paddingBottom: Platform.OS === "ios" ? 25 : 10,
           paddingTop: 10,
           borderTopWidth: 1,

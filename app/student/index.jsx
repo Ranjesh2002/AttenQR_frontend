@@ -136,7 +136,7 @@ export default function StudentHomeScreen() {
             >
               <View style={styles.overlay}>
                 <View style={styles.scanFrame} />
-                <Text style={styles.scanText}>Scanning for QR Code...</Text>
+                <Text style={styles.scanText}>Scanning QR Code...</Text>
               </View>
             </CameraView>
             <TouchableOpacity

@@ -1,8 +1,8 @@
 import Colors from "@/constants/Colors";
 import { shadows } from "@/constants/theme";
-import { mockNotifications } from "@/utils/mockData";
+import api from "@/utils/api";
 import { AlertTriangle, Bell, CheckCircle, Info } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -14,12 +14,24 @@ import {
 import Animated, { FadeInUp } from "react-native-reanimated";
 
 export default function Notification() {
-  const [notifications, setNotifications] = useState(
-    [...mockNotifications].sort(
-      (a, b) =>
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    )
-  );
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await api.get("/alerts", {
+          withCredentials: true,
+        });
+        const sorted = res.data.alert.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+        setNotifications(sorted);
+      } catch (error) {
+        console.log("Failed to load alerts:", error);
+      }
+    };
+    fetch();
+  }, []);
 
   const markAsRead = (id) => {
     setNotifications((prev) =>
@@ -28,9 +40,9 @@ export default function Notification() {
   };
 
   const getNotification = (type) => {
-    if ("warning") {
+    if (type === "warning") {
       return <AlertTriangle size={24} color={Colors.light.warning} />;
-    } else if ("success") {
+    } else if (type === "success") {
       return <CheckCircle size={24} color={Colors.light.success} />;
     } else {
       return <Info size={24} color={Colors.light.primary} />;
@@ -63,7 +75,7 @@ export default function Notification() {
           <Text style={styles.notificationTitle}>{item.title}</Text>
           <Text style={styles.notificationMessage}>{item.message}</Text>
           <Text style={styles.notificationTimestamp}>
-            {formatDate(item.timestamp)}
+            {formatDate(item.date)}
           </Text>
         </View>
         {!item.read && <View style={styles.unreadDot} />}
