@@ -50,7 +50,7 @@ export default function Login() {
         alert("Login successful");
 
         if (user.role === "teacher") {
-          router.push("/teacher");
+          router.push("/parent");
         } else {
           router.push("/student");
         }
@@ -120,23 +120,6 @@ export default function Login() {
             <Text style={styles.btnText}>Sign in as {role}</Text>
           )}
         </TouchableOpacity>
-
-        <Text style={styles.fText}>
-          Don't have an account?{" "}
-          <Text style={styles.lText} onPress={() => router.push("/register")}>
-            Register
-          </Text>
-        </Text>
-        <Text style={styles.fText}>OR</Text>
-        <Text style={styles.fText}>
-          Login with parent credentials?{" "}
-          <Text
-            style={styles.lText}
-            onPress={() => router.push("/login_parent")}
-          >
-            Login
-          </Text>
-        </Text>
       </View>
     </View>
   );
