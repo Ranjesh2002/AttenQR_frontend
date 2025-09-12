@@ -66,9 +66,9 @@ export default function Home() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Good morning, Sarah!</Text>
+        <Text style={styles.headerTitle}>Good morning, Anil!</Text>
         <Text style={styles.headerSubtitle}>
-          Here's Emily's attendance summary
+          Here's Ratik's attendance summary
         </Text>
       </View>
 
