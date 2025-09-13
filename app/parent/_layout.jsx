@@ -1,6 +1,6 @@
 import { colors } from "@/constants/theme";
 import { Tabs } from "expo-router";
-import { Bell, Calendar, Home, User } from "lucide-react-native";
+import { Calendar, Home, MessageSquare, User } from "lucide-react-native";
 import { Platform } from "react-native";
 
 export default function StudentTabLayout() {
@@ -48,8 +48,10 @@ export default function StudentTabLayout() {
       <Tabs.Screen
         name="alert"
         options={{
-          title: "Alerts",
-          tabBarIcon: ({ color, size }) => <Bell size={size} color={color} />,
+          title: "Messages",
+          tabBarIcon: ({ color, size }) => (
+            <MessageSquare size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
