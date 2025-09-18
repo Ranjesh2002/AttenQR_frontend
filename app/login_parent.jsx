@@ -14,7 +14,6 @@ import api from "../utils/api";
 
 export default function Login() {
   const router = useRouter();
-  const [role, setRole] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -28,32 +27,23 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await api.post("/login/", {
+      const response = await api.post("/parent-login/", {
         email: email,
         password: password,
       });
 
       if (response.status === 200) {
         const { user, tokens } = response.data;
-        if (user.role !== role) {
-          Alert.alert("selected role does not match the user role");
-          alert("selected role does not match the user role");
-          setIsLoading(false);
-          return;
-        }
+
         await AsyncStorage.multiSet([
-          ["user", JSON.stringify(user)],
+          ["user", JSON.stringify({ ...user, role: "parent" })],
           ["accessToken", tokens.access],
           ["refreshToken", tokens.refresh],
         ]);
 
-        alert("Login successful");
+        Alert.alert("Login Successful", "Welcome, Parent!");
 
-        if (user.role === "teacher") {
-          router.push("/parent");
-        } else {
-          router.push("/student");
-        }
+        router.push("/parent");
       }
     } catch (error) {
       console.log("Login error:", error?.response?.data || error.message);
@@ -70,27 +60,6 @@ export default function Login() {
         <Text style={styles.subtitle}>
           Enter your credentials to access your account
         </Text>
-
-        <View style={styles.roleBtn}>
-          <TouchableOpacity
-            style={[
-              styles.rolebtn,
-              role === "student" ? styles.active : styles.inactive,
-            ]}
-            onPress={() => setRole("student")}
-          >
-            <Text style={styles.roleT}>Student</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.rolebtn,
-              role === "teacher" ? styles.active : styles.inactive,
-            ]}
-            onPress={() => setRole("teacher")}
-          >
-            <Text style={styles.roleT}>Teacher</Text>
-          </TouchableOpacity>
-        </View>
 
         <TextInput
           style={styles.input}
@@ -117,7 +86,7 @@ export default function Login() {
           {isLoading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.btnText}>Sign in as {role}</Text>
+            <Text style={styles.btnText}>Sign in as Parent</Text>
           )}
         </TouchableOpacity>
       </View>
