@@ -18,7 +18,7 @@ import {
 import { AuthGuard } from "../../components/AuthGaurd";
 import api from "../../utils/api";
 
-export default function TeacherHomeScreen() {
+export default function IndexHomeScreen() {
   const router = useRouter();
   const [username, setUsername] = useState(null);
   const [classSession, setClassSession] = useState(null);

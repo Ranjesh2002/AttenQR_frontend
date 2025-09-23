@@ -150,8 +150,12 @@ export default function StudentHomeScreen() {
           <View style={styles.btnContainer}>
             {success ? (
               <Animated.View
-                entering={FadeIn.duration(300)}
-                exiting={FadeOut.duration(300)}
+                entering={
+                  Platform.OS === "web" ? undefined : FadeIn.duration(300)
+                }
+                exiting={
+                  Platform.OS === "web" ? undefined : FadeOut.duration(300)
+                }
                 style={styles.successContainer}
               >
                 <Ionicons

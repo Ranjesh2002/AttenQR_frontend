@@ -5,6 +5,7 @@ import { AlertTriangle, Bell, CheckCircle, Info } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -13,7 +14,7 @@ import {
 } from "react-native";
 import Animated, { FadeInUp } from "react-native-reanimated";
 
-export default function Notification() {
+export default function Alert() {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
@@ -60,7 +61,13 @@ export default function Notification() {
   };
 
   const renderItem = ({ item, index }) => (
-    <Animated.View entering={FadeInUp.delay(index * 100).duration(400)}>
+    <Animated.View
+      entering={
+        Platform.OS === "web"
+          ? undefined
+          : FadeInUp.delay(index * 100).duration(400)
+      }
+    >
       <TouchableOpacity
         style={[
           styles.notificationItem,

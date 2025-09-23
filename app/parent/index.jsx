@@ -1,19 +1,7 @@
-import {
-  Bell,
-  Calendar,
-  Check,
-  Clock,
-  TrendingUp,
-  X,
-} from "lucide-react-native";
-import React from "react";
+import api from "@/utils/api";
+import { Bell, Calendar, TrendingUp } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-
-const todayAttendance = {
-  status: "present",
-  time: "8:45 AM",
-  date: new Date().toLocaleDateString(),
-};
 
 const weeklyStats = {
   present: 4,
@@ -41,34 +29,42 @@ const recentAnnouncements = [
 ];
 
 export default function Home() {
+  const [dash, setDash] = useState("");
+
+  useEffect(() => {
+    const fetchapi = async () => {
+      try {
+        const res = await api.get("/parent_dashboard_view/");
+        setDash(res.data);
+      } catch (error) {
+        console.log("Error fetching profile:", error);
+      }
+    };
+    fetchapi();
+  }, []);
+
   const getStatusIcon = () => {
-    switch (todayAttendance.status) {
-      case "present":
-        return <Check size={16} color="green" />;
-      case "absent":
-        return <X size={16} color="red" />;
-      default:
-        return <Clock size={16} color="orange" />;
-    }
+    if (!dash?.todayAttendance) return <Text>❓</Text>;
+    return dash.todayAttendance.status === "present" ? (
+      <Text>✅</Text>
+    ) : (
+      <Text>❌</Text>
+    );
   };
 
   const getStatusText = () => {
-    switch (todayAttendance.status) {
-      case "present":
-        return "Present";
-      case "absent":
-        return "Absent";
-      default:
-        return "Not Marked";
-    }
+    if (!dash?.todayAttendance) return "Not marked yet";
+    return dash.todayAttendance.status === "present" ? "Present" : "Absent";
   };
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Good morning, Anil!</Text>
+        <Text style={styles.headerTitle}>
+          Good morning, {dash?.parent?.name}
+        </Text>
         <Text style={styles.headerSubtitle}>
-          Here's Ratik's attendance summary
+          Here's {dash?.student?.name} attendance summary
         </Text>
       </View>
 
@@ -82,8 +78,10 @@ export default function Home() {
             {getStatusIcon()}
             <Text style={styles.statusText}>{getStatusText()}</Text>
           </View>
-          {todayAttendance.status === "present" && (
-            <Text style={styles.subText}>Marked at {todayAttendance.time}</Text>
+          {dash?.todayAttendance?.status === "present" && (
+            <Text style={styles.subText}>
+              Marked at {dash.todayAttendance.time}
+            </Text>
           )}
         </View>
       </View>
@@ -97,22 +95,23 @@ export default function Home() {
           <View style={styles.rowBetween}>
             <View>
               <Text style={styles.bigText}>
-                {weeklyStats.present}/{weeklyStats.total}
+                {dash?.weeklyStats?.present}/{dash?.weeklyStats?.total}
               </Text>
               <Text style={styles.subText}>days present</Text>
             </View>
             <View style={{ alignItems: "flex-end" }}>
               <Text style={[styles.bigText, { color: "green" }]}>
-                {weeklyStats.percentage}%
+                {dash?.weeklyStats?.percentage ?? 0}%
               </Text>
               <Text style={styles.subText}>attendance</Text>
             </View>
           </View>
+
           <View style={styles.progressBar}>
             <View
               style={[
                 styles.progressFill,
-                { width: `${weeklyStats.percentage}%` },
+                { width: `${dash?.weeklyStats?.percentage ?? 0}%` },
               ]}
             />
           </View>

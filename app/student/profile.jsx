@@ -96,7 +96,7 @@ export default function ProfileScreen() {
       </View>
 
       <Animated.View
-        entering={FadeInDown.duration(600)}
+        entering={Platform.OS === "web" ? undefined : FadeInDown.duration(600)}
         style={styles.infoCard}
       >
         <View style={styles.infoRow}>

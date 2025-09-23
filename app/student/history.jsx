@@ -15,7 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Animated, { FadeInRight } from "react-native-reanimated";
+import Animated, { FadeInUp } from "react-native-reanimated";
 import api from "../../utils/api";
 
 export default function HistoryScreen() {
@@ -43,7 +43,11 @@ export default function HistoryScreen() {
 
   const renderItem = ({ item, index }) => (
     <Animated.View
-      entering={FadeInRight.delay(index * 100).duration(400)}
+      entering={
+        Platform.OS === "web"
+          ? undefined
+          : FadeInUp.delay(index * 100).duration(400)
+      }
       style={styles.attendanceItem}
     >
       <View style={styles.dateContainer}>
