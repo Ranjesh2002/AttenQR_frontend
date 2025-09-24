@@ -3,12 +3,6 @@ import { Bell, Calendar, TrendingUp } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-const weeklyStats = {
-  present: 4,
-  total: 5,
-  percentage: 80,
-};
-
 const recentAnnouncements = [
   {
     id: 1,
