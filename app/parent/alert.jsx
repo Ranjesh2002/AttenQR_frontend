@@ -1,5 +1,6 @@
+import api from "@/utils/api";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -7,64 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-
-const messages = [
-  {
-    id: 1,
-    title: "Parent-Teacher Meeting Scheduled",
-    content:
-      "Annual parent-teacher meeting scheduled for this Saturday at 10 AM in the school auditorium. Please confirm your attendance by replying to this message.",
-    type: "event",
-    date: "2 hours ago",
-    sender: "Principal Mrs. Johnson",
-    isRead: false,
-    priority: "high",
-  },
-  {
-    id: 2,
-    title: "Mathematics Test Results Published",
-    content:
-      "Mathematics test results have been published. Emily scored 92/100. Overall class performance was excellent with an average of 85%.",
-    type: "academic",
-    date: "1 day ago",
-    sender: "Math Teacher Mr. Smith",
-    isRead: true,
-    priority: "medium",
-  },
-  {
-    id: 3,
-    title: "School Closure Notice",
-    content:
-      "Due to severe weather conditions, the school will remain closed tomorrow, January 17th. Online classes will be conducted as per regular schedule.",
-    type: "alert",
-    date: "2 days ago",
-    sender: "Administration Office",
-    isRead: true,
-    priority: "high",
-  },
-  {
-    id: 4,
-    title: "Science Fair Participation",
-    content:
-      "Invitation to participate in the annual science fair. Registration deadline is February 1st. Please encourage your child to participate.",
-    type: "event",
-    date: "3 days ago",
-    sender: "Science Department",
-    isRead: true,
-    priority: "medium",
-  },
-  {
-    id: 5,
-    title: "Fee Payment Reminder",
-    content:
-      "Friendly reminder that the monthly fee payment is due by January 25th. Please ensure timely payment to avoid any inconvenience.",
-    type: "announcement",
-    date: "1 week ago",
-    sender: "Accounts Department",
-    isRead: true,
-    priority: "medium",
-  },
-];
 
 const getIcon = (type) => {
   switch (type) {
@@ -83,8 +26,28 @@ const getIcon = (type) => {
 
 export default function MessagesScreen() {
   const [selectedMessage, setSelectedMessage] = useState(null);
+  const [data, setData] = useState([]);
 
-  const unreadCount = messages.filter((m) => !m.isRead).length;
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await api.get("/parent_message/");
+        setData(res.data);
+      } catch (error) {
+        console.log("Error fetching message:", error);
+      }
+    };
+    fetch();
+  }, []);
+
+  const unreadCount = data.filter((m) => !m.isRead).length;
+  if (!data || data.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text>No messages available</Text>
+      </View>
+    );
+  }
 
   const renderMessage = ({ item }) => {
     const { name, color } = getIcon(item.type);
@@ -145,7 +108,7 @@ export default function MessagesScreen() {
       <View style={styles.statsRow}>
         <View style={styles.statBox}>
           <Text style={[styles.statNumber, { color: "#3b82f6" }]}>
-            {messages.length}
+            {data.length}
           </Text>
           <Text style={styles.statLabel}>Total</Text>
         </View>
@@ -157,14 +120,14 @@ export default function MessagesScreen() {
         </View>
         <View style={styles.statBox}>
           <Text style={[styles.statNumber, { color: "#10b981" }]}>
-            {messages.length - unreadCount}
+            {data.length - unreadCount}
           </Text>
           <Text style={styles.statLabel}>Read</Text>
         </View>
       </View>
 
       <FlatList
-        data={messages}
+        data={data}
         renderItem={renderMessage}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ paddingBottom: 20 }}
