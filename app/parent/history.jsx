@@ -1,5 +1,6 @@
+import api from "@/utils/api";
 import { BarChart3, Calendar, CalendarDays } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Platform,
   ScrollView,
@@ -9,31 +10,6 @@ import {
   View,
 } from "react-native";
 
-const attendanceData = [
-  { date: "2024-01-15", status: "present" },
-  { date: "2024-01-16", status: "present" },
-  { date: "2024-01-17", status: "absent" },
-  { date: "2024-01-18", status: "present" },
-  { date: "2024-01-19", status: "present" },
-  { date: "2024-01-22", status: "present" },
-  { date: "2024-01-23", status: "present" },
-  { date: "2024-01-24", status: "present" },
-  { date: "2024-01-25", status: "absent" },
-  { date: "2024-01-26", status: "present" },
-];
-
-const monthlyStats = {
-  totalDays: 20,
-  presentDays: 17,
-  absentDays: 3,
-  percentage: 85,
-};
-
-const firstDate = attendanceData.length
-  ? new Date(attendanceData[0].date)
-  : new Date();
-const displayMonthIndex = firstDate.getMonth();
-const displayYear = firstDate.getFullYear();
 const monthNames = [
   "January",
   "February",
@@ -49,10 +25,7 @@ const monthNames = [
   "December",
 ];
 
-function generateCalendarDays(
-  monthIndex = displayMonthIndex,
-  year = displayYear
-) {
+function generateCalendarDays(monthIndex, attendanceData, year) {
   const days = [];
   const firstDay = new Date(year, monthIndex, 1);
   const lastDay = new Date(year, monthIndex + 1, 0);
@@ -77,14 +50,53 @@ function generateCalendarDays(
 
 export default function AttendanceScreen() {
   const [viewMode, setViewMode] = useState("calendar");
-  const calendarDays = generateCalendarDays();
+  const [data, setData] = useState([]);
+  const [monthlyStats, setMonthlyStats] = useState({
+    totalDays: 0,
+    presentDays: 0,
+    absentDays: 0,
+    percentage: 0,
+  });
 
-  const presentPct = Math.round(
-    (monthlyStats.presentDays / monthlyStats.totalDays) * 100
+  const today = new Date();
+  const displayMonthIndex = today.getMonth();
+  const displayYear = today.getFullYear();
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await api.get("/parent-attendance-history/");
+        setData(
+          res.data.attendance_records.map((r) => ({
+            data: r.data,
+            status: "present",
+          }))
+        );
+        setMonthlyStats({
+          totalDays: res.data.stats.total_classes,
+          presentDays: res.data.stats.present,
+          absentDays: res.data.stats.absent,
+          percentage: res.data.stats.percentage,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetch();
+  }, []);
+
+  const calendarDays = generateCalendarDays(
+    data,
+    displayMonthIndex,
+    displayYear
   );
-  const absentPct = Math.round(
-    (monthlyStats.absentDays / monthlyStats.totalDays) * 100
-  );
+
+  const presentPct = monthlyStats.totalDays
+    ? Math.round((monthlyStats.presentDays / monthlyStats.totalDays) * 100)
+    : 0;
+  const absentPct = monthlyStats.totalDays
+    ? Math.round((monthlyStats.absentDays / monthlyStats.totalDays) * 100)
+    : 0;
 
   return (
     <ScrollView

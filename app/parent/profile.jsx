@@ -1,3 +1,4 @@
+import api from "@/utils/api";
 import {
   Bell,
   GraduationCap,
@@ -8,7 +9,9 @@ import {
   Shield,
   User,
 } from "lucide-react-native";
+import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,21 +20,6 @@ import {
 } from "react-native";
 import { Avatar } from "react-native-paper";
 import { logout } from "../../utils/auth";
-
-const parentInfo = {
-  name: "Sarah Johnson",
-  email: "sarah.johnson@email.com",
-  phone: "+1 (555) 123-4567",
-  relationship: "Mother",
-};
-
-const studentInfo = {
-  name: "Ratik Bajracharya",
-  class: "Grade 8-A",
-  rollNumber: "2024-GA-085",
-  section: "Science",
-  admissionYear: "2020",
-};
 
 const quickActions = [
   {
@@ -52,9 +40,35 @@ const quickActions = [
 ];
 
 export default function Profile() {
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await api.get("/parent_profile/");
+        setProfile(res.data);
+      } catch (err) {
+        console.log("Error fetching parent profile:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetch();
+  }, []);
+
   const handleLogout = () => {
     logout();
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#3b82f6" />
+        <Text style={{ marginTop: 10 }}>Loading parent profile...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -75,16 +89,20 @@ export default function Profile() {
           <View style={styles.row}>
             <Avatar.Text
               size={40}
-              label={parentInfo.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
+              label={
+                profile?.name
+                  ? profile.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                  : "?"
+              }
               style={{ backgroundColor: "#3b82f6" }}
               color="white"
             />
             <View style={styles.flex1}>
-              <Text style={styles.name}>{parentInfo.name}</Text>
-              <Text style={styles.muted}>{parentInfo.relationship}</Text>
+              <Text style={styles.name}>{profile?.name || "N/A"}</Text>
+              <Text style={styles.muted}>Father</Text>
             </View>
           </View>
 
@@ -95,14 +113,16 @@ export default function Profile() {
               <Mail size={16} color="#6b7280" />
               <View>
                 <Text style={styles.infoLabel}>Email</Text>
-                <Text style={styles.infoValue}>{parentInfo.email}</Text>
+                <Text style={styles.infoValue}>{profile?.email || "N/A"}</Text>
               </View>
             </View>
             <View style={styles.infoRow}>
               <Phone size={16} color="#6b7280" />
               <View>
                 <Text style={styles.infoLabel}>Phone</Text>
-                <Text style={styles.infoValue}>{parentInfo.phone}</Text>
+                <Text style={styles.infoValue}>
+                  {profile?.phone_number || "N/A"}
+                </Text>
               </View>
             </View>
           </View>
@@ -117,16 +137,22 @@ export default function Profile() {
           <View style={styles.row}>
             <Avatar.Text
               size={40}
-              label={studentInfo.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
+              label={
+                profile.student?.name
+                  ? profile.student.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                  : "?"
+              }
               style={{ backgroundColor: "#22c55e" }}
               color="white"
             />
             <View style={styles.flex1}>
-              <Text style={styles.name}>{studentInfo.name}</Text>
-              <Text style={styles.muted}>{studentInfo.class}</Text>
+              <Text style={styles.name}>{profile.student?.name || "N/A"}</Text>
+              <Text style={styles.muted}>
+                {profile.student?.department || "N/A"}
+              </Text>
             </View>
           </View>
 
@@ -134,20 +160,22 @@ export default function Profile() {
 
           <View style={styles.grid}>
             <View style={styles.gridItem}>
-              <Text style={styles.infoLabel}>Roll Number</Text>
-              <Text style={styles.infoValue}>{studentInfo.rollNumber}</Text>
+              <Text style={styles.infoLabel}>Student ID</Text>
+              <Text style={styles.infoValue}>
+                {profile.student?.student_id || "N/A"}
+              </Text>
             </View>
             <View style={styles.gridItem}>
-              <Text style={styles.infoLabel}>Section</Text>
-              <Text style={styles.infoValue}>{studentInfo.section}</Text>
+              <Text style={styles.infoLabel}>Year</Text>
+              <Text style={styles.infoValue}>
+                {profile.student?.year || "N/A"}
+              </Text>
             </View>
             <View style={styles.gridItem}>
-              <Text style={styles.infoLabel}>Admission Year</Text>
-              <Text style={styles.infoValue}>{studentInfo.admissionYear}</Text>
-            </View>
-            <View style={styles.gridItem}>
-              <Text style={styles.infoLabel}>Class</Text>
-              <Text style={styles.infoValue}>{studentInfo.class}</Text>
+              <Text style={styles.infoLabel}>Email</Text>
+              <Text style={styles.infoValue}>
+                {profile.student?.email || "N/A"}
+              </Text>
             </View>
           </View>
         </View>
