@@ -32,7 +32,7 @@ export default function MessagesScreen() {
     const fetch = async () => {
       try {
         const res = await api.get("/parent_message/");
-        setData(res.data);
+        setData(res.data.messages);
       } catch (error) {
         console.log("Error fetching message:", error);
       }
@@ -40,7 +40,7 @@ export default function MessagesScreen() {
     fetch();
   }, []);
 
-  const unreadCount = data.filter((m) => !m.isRead).length;
+  const unreadCount = data.filter((m) => !m.is_read).length;
   if (!data || data.length === 0) {
     return (
       <View style={styles.container}>
@@ -139,7 +139,7 @@ export default function MessagesScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f9fafb", padding: 16 },
   header: {
-    backgroundColor: "#3b82f6",
+    backgroundColor: "#2563EB",
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,

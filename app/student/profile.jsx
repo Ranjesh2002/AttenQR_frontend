@@ -8,7 +8,6 @@ import {
 } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
-  Image,
   Platform,
   ScrollView,
   StyleSheet,
@@ -16,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Avatar } from "react-native-paper";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import api from "../../utils/api";
 import { logout } from "../../utils/auth";
@@ -80,9 +80,22 @@ export default function ProfileScreen() {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
         <View style={styles.profileImageContainer}>
-          <Image
+          {/* <Image
             source={require("../../assets/images/profile.png")}
             style={styles.profileImage}
+          /> */}
+          <Avatar.Text
+            size={40}
+            label={
+              profile?.fullname
+                ? profile.fullname
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                : "?"
+            }
+            style={{ backgroundColor: "#3b82f6" }}
+            color="white"
           />
           <TouchableOpacity style={styles.editButton}>
             <Edit2 size={16} color={colors.white} />

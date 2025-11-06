@@ -66,12 +66,11 @@ export default function AttendanceScreen() {
     const fetch = async () => {
       try {
         const res = await api.get("/parent-attendance-history/");
-        setData(
-          res.data.attendance_records.map((r) => ({
-            data: r.data,
-            status: "present",
-          }))
-        );
+        const records = res.data.attendance_records.map((r) => ({
+          data: r.data,
+          status: "present",
+        }));
+        setData(records);
         setMonthlyStats({
           totalDays: res.data.stats.total_classes,
           presentDays: res.data.stats.present,
@@ -86,8 +85,8 @@ export default function AttendanceScreen() {
   }, []);
 
   const calendarDays = generateCalendarDays(
-    data,
     displayMonthIndex,
+    data,
     displayYear
   );
 
@@ -106,7 +105,7 @@ export default function AttendanceScreen() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Attendance</Text>
         <Text style={styles.headerSubtitle}>
-          Track Ratik's attendance history
+          Track Ranjesh's attendance history
         </Text>
       </View>
 
