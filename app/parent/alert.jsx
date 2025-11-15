@@ -137,11 +137,11 @@ export default function MessagesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f9fafb", padding: 16 },
+  container: { flex: 1, backgroundColor: "#f9fafb", padding: 2 },
   header: {
     backgroundColor: "#2563EB",
     padding: 16,
-    borderRadius: 8,
+    // borderRadius: 8,
     marginBottom: 16,
   },
   headerTitle: { color: "#fff", fontSize: 20, fontWeight: "bold" },

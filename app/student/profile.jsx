@@ -1,11 +1,5 @@
 import { colors, fontSizes, shadows, spacing } from "@/constants/theme";
-import {
-  BookOpen,
-  CalendarCheck,
-  CreditCard as Edit2,
-  Flame,
-  LogOut,
-} from "lucide-react-native";
+import { BookOpen, CalendarCheck, Flame, LogOut } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
   Platform,
@@ -80,10 +74,6 @@ export default function ProfileScreen() {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
         <View style={styles.profileImageContainer}>
-          {/* <Image
-            source={require("../../assets/images/profile.png")}
-            style={styles.profileImage}
-          /> */}
           <Avatar.Text
             size={40}
             label={
@@ -97,9 +87,6 @@ export default function ProfileScreen() {
             style={{ backgroundColor: "#3b82f6" }}
             color="white"
           />
-          <TouchableOpacity style={styles.editButton}>
-            <Edit2 size={16} color={colors.white} />
-          </TouchableOpacity>
         </View>
 
         <Text style={styles.name}>
