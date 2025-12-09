@@ -1,14 +1,15 @@
 name: Build Android APK (Expo)
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Manual trigger; you can change to push trigger later
 
 jobs:
   build:
     name: Build APK
     runs-on: ubuntu-latest
     env:
-      EAS_TOKEN: ${{ secrets.EAS_TOKEN }}   # <- set here at job level
+      EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
+      EXPO_TOKEN: ${{ secrets.EAS_TOKEN }}   # Ensure compatibility with older CLI versions
 
     steps:
       - name: Checkout code
@@ -22,16 +23,23 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install EAS CLI
-        run: npm install -g eas-cli
+      - name: Install latest EAS CLI
+        run: npm install -g eas-cli@latest
+
+      - name: Verify EAS CLI version
+        run: eas --version
 
       - name: Build Android APK
         run: eas build --platform android --profile preview --non-interactive --json > build.json
 
+      - name: Show build JSON for debug
+        run: cat build.json
+
       - name: Download built APK from Expo
         run: |
           url=$(jq -r '.[0].artifacts.buildUrl' < build.json)
-          curl -o app.apk "$url"
+          echo "Downloading APK from: $url"
+          curl -L -o app.apk "$url"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
