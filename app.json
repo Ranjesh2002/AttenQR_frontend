@@ -3,6 +3,7 @@
     "name": "AttenQR",
     "slug": "AttenQR",
     "version": "1.0.0",
+    "owner": "ranjesh",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "attenqr",
