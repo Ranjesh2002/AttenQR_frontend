@@ -132,11 +132,11 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 16 },
+  container: { flex: 1, backgroundColor: "#fff" },
   header: {
     backgroundColor: "#2563EB",
-    paddingVertical: 20,
-    paddingHorizontal: 16,
+    padding: 20,
+    borderRadius: 6
   },
   headerTitle: { color: "#fff", fontSize: 20, fontWeight: "bold" },
   headerSubtitle: { color: "rgba(255,255,255,0.8)", marginTop: 4 },

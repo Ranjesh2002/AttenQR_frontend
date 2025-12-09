@@ -1,3 +1,4 @@
+import Colors from "@/constants/Colors";
 import { colors, fontSizes, shadows, spacing } from "@/constants/theme";
 import { BookOpen, CalendarCheck, Flame, LogOut } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
@@ -171,7 +172,7 @@ export default function ProfileScreen() {
 
       <Animated.View entering={FadeInDown.delay(200).duration(600)}>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <LogOut size={20} color={colors.error} />
+          <LogOut size={20} color="white" />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </Animated.View>
@@ -289,7 +290,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(245, 101, 101, 0.1)",
+    backgroundColor: Colors.light.error,
     marginHorizontal: spacing.lg,
     marginTop: spacing.xl,
     padding: spacing.md,
@@ -299,7 +300,7 @@ const styles = StyleSheet.create({
   logoutText: {
     fontSize: fontSizes.md,
     fontFamily: "Inter-Medium",
-    color: colors.error,
+    color: "white",
   },
   versionContainer: {
     alignItems: "center",

@@ -137,11 +137,10 @@ export default function MessagesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f9fafb", padding: 2 },
+  container: { flex: 1, backgroundColor: "#f9fafb" },
   header: {
     backgroundColor: "#2563EB",
-    padding: 16,
-    // borderRadius: 8,
+    padding: 20,
     marginBottom: 16,
   },
   headerTitle: { color: "#fff", fontSize: 20, fontWeight: "bold" },
@@ -193,5 +192,10 @@ const styles = StyleSheet.create({
   },
   detailTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 8 },
   detailContent: { fontSize: 14, marginTop: 8, color: "#374151" },
-  back: { marginBottom: 12, color: "#3b82f6", fontWeight: "600" },
+  back: {
+    marginBottom: 12,
+    color: "#3b82f6",
+    fontWeight: "600",
+    margin: "10",
+  },
 });

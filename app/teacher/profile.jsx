@@ -1,9 +1,8 @@
 import Colors from "@/constants/Colors";
-import { shadows } from "@/constants/theme";
+import { fontSizes, shadows } from "@/constants/theme";
 import { BookOpen, LogOut, Mail, Settings, User } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -11,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Avatar } from "react-native-paper";
 import api from "../../utils/api";
 import { logout } from "../../utils/auth";
 
@@ -66,9 +66,18 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.profileCard}>
-          <Image
-            source={require("../../assets/images/profile.png")}
-            style={styles.profileImage}
+          <Avatar.Text
+            size={40}
+            label={
+              profile?.fullname
+                ? profile.fullname
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                : "?"
+            }
+            style={{ backgroundColor: "#3b82f6" }}
+            color="white"
           />
           <Text style={styles.name}>
             {profile ? profile.fullname : "no name"}
@@ -245,7 +254,7 @@ const styles = StyleSheet.create({
     ...shadows.sm,
   },
   logoutText: {
-    fontSize: 16,
+    fontSize: fontSizes.md,
     fontWeight: "600",
     color: "white",
     marginLeft: 8,

@@ -1,3 +1,5 @@
+import Colors from "@/constants/Colors";
+import { fontSizes } from "@/constants/theme";
 import api from "@/utils/api";
 import {
   Bell,
@@ -208,7 +210,7 @@ export default function Profile() {
             style={styles.logoutButton}
             activeOpacity={0.7}
           >
-            <LogOut size={18} color="#ef4444" style={{ marginRight: 6 }} />
+            <LogOut size={18} color="white" style={{ marginRight: 6 }} />
             <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
         </View>
@@ -226,7 +228,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
   header: {
     backgroundColor: "#2563EB",
-    padding: 24,
+    padding: 20,
   },
   headerTitle: {
     fontSize: 22,
@@ -283,12 +285,11 @@ const styles = StyleSheet.create({
   logoutButton: {
     flexDirection: "row",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#ef4444",
+    backgroundColor: Colors.light.error,
     padding: 12,
     borderRadius: 8,
   },
-  logoutText: { color: "#ef4444", fontWeight: "500" },
+  logoutText: { color: "white", fontWeight: "600", fontSize: fontSizes.md },
   footer: { alignItems: "center", paddingVertical: 16 },
   footerText: { fontSize: 12, color: "#6b7280" },
   footerSubText: { fontSize: 12, color: "#9ca3af" },

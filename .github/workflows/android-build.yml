@@ -1,0 +1,46 @@
+name: Build Android APK (Expo)
+
+on:
+  workflow_dispatch:     # manually trigger
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install EAS CLI
+        run: pnpm install -g eas-cli
+
+      - name: Expo login using token
+        run: eas login --token ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build Android APK
+        run: eas build --platform android --profile preview --non-interactive --json > build.json
+
+      - name: Download built APK from Expo
+        run: |
+          url=$(jq -r '.[0].artifacts.buildUrl' < build.json)
+          curl -o app.apk "$url"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: expo-apk
+          path: app.apk

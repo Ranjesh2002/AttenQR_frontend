@@ -323,8 +323,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F8FAFC" },
   header: {
     backgroundColor: "#2563EB",
-    paddingVertical: 20,
-    paddingHorizontal: 16,
+    padding: 20,
   },
   headerTitle: { color: "#fff", fontSize: 22, fontWeight: "700" },
   headerSubtitle: { color: "rgba(255,255,255,0.9)", marginTop: 6 },
