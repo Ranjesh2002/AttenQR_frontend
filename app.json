@@ -18,7 +18,8 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.ranjesh.AttenQR"
+      "package": "com.ranjesh.AttenQR",
+      "usesCleartextTraffic": true
     },
     "web": {
       "bundler": "metro",
@@ -27,7 +28,13 @@
     },
     "plugins": [
       "expo-router",
-      "expo-barcode-scanner"
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow AttenQR to access camera for scanning QR codes"
+        }
+      ],
+      "./plugins/android-network-config.js"
     ],
     "experiments": {
       "typedRoutes": true
